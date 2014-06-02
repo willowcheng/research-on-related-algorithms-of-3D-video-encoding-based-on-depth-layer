@@ -9,6 +9,7 @@
 #install.packages("xlsx")
 
 # Load dependent library so that .xlsx file can be read
+library(rJava)
 library(xlsxjars)
 library(xlsx)
 RawData <- read.xlsx(file="./RawData.xlsx", sheetIndex=1)
@@ -47,3 +48,8 @@ with(DMVP_OnOff, qplot(Rate, PSNR, col = OnOff,
 ## Step 5: Copy graph from device into hard disk in work directory
 dev.copy(png, file="DMVP_analysis.png")
 dev.off()
+
+# For optional format for analysis
+# Txt format of raw data as well as organized data is supplied
+write.table(RawData, file="./RawData.txt")
+write.table(DMVP_Data, file="./DMVP_Data.txt")

@@ -9,11 +9,10 @@
 #install.packages("xlsx")
 
 # Load dependent library so that .xlsx file can be read
+library(rJava)
 library(xlsxjars)
 library(xlsx)
 RawData <- read.xlsx(file="./RawData.xlsx", sheetIndex=1)
-
-
 
 
 ## Step 2: Subset by observations
@@ -24,7 +23,6 @@ SubData <- RawData[RawData$VSP_Enable=="Enable" &
                            RawData$DepthBaseMVP=="Enable", ]
 ALC_SubData <- SubData[
         SubData$Texture_QPISlice==SubData$Depth_QPISlice, ]
-
 
 
 ## Step 3: Subset by variables
@@ -51,3 +49,8 @@ with(ALC_OnOff, qplot(Rate, PSNR, col = OnOff,
 ## Step 5: Copy graph from device into hard disk in work directory
 dev.copy(png, file="ALC_analysis.png")
 dev.off()
+
+# For optional format for analysis
+# Txt format of raw data as well as organized data is supplied
+write.table(RawData, file="./RawData.txt")
+write.table(ALC_Data, file="./ALC_Data.txt")
