@@ -22,9 +22,11 @@ VSP_SubData <- SubData[SubData$Texture_QPISlice==SubData$ Depth_QPISlice, ]
 
 
 ## Step 3: Subset by variables
-VSP_Data <- data.frame(OnOff=VSP_SubData$VSP_Enable, 
+VSP_sData <- data.frame(OnOff=VSP_SubData$VSP_Enable, 
                        Rate=VSP_SubData$SUM_Rate, 
                        PSNR=VSP_SubData$AVE_PSNR)
+# Order by OnOff variable for precise observation
+VSP_Data <- VSP_sData[order(VSP_sData$OnOff),]
 
 
 ## Step 4: Use ggplot package to plot graph
