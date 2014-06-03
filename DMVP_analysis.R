@@ -41,7 +41,6 @@ with(DMVP_OnOff, qplot(Rate, PSNR, col = OnOff,
                       geom = c("point", "line"),
                       xlab = "Rate (Kbps)",
                       ylab = "PSNR (dB)",
-                      asp = 0.85, 
                       main = "DEPTH BASED MOTION VECTOR PREDICTION"))
 
 
@@ -49,6 +48,19 @@ with(DMVP_OnOff, qplot(Rate, PSNR, col = OnOff,
 dev.copy(png, file="DMVP_analysis.png")
 dev.off()
 
+
+## Step 6: Analize the average value of PSNR depending on difference QP_texture
+DMVP_Difference_PSNR <- mean(DMVP_Data[DMVP_Data$OnOff=="Enable",]$PSNR) - 
+        mean(DMVP_Data[DMVP_Data$OnOff=="Disable",]$PSNR)
+
+## Step 7: Compare the difference when DMVP is enable or disable
+DMVP_Difference_Rate <- vector()
+for (i in 1:(length(DMVP_Data$OnOff)/2)) {
+        DMVP_Difference_Rate <- cbind(DMVP_Difference_Rate, (DMVP_Data[DMVP_Data$OnOff=="Disable",]$Rate[i] - 
+                                         DMVP_Data[DMVP_Data$OnOff=="Enable",]$Rate[i]) / 
+                                         DMVP_Data[DMVP_Data$OnOff=="Disable",]$Rate[i])
+}
+AVE_DMVP_Difference_Rate <- mean(DMVP_Difference_Rate)
 # For optional format for analysis
 # Txt format of raw data as well as organized data is supplied
 write.table(RawData, file="./RawData.txt")

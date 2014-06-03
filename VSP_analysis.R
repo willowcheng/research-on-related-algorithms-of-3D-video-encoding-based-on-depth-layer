@@ -39,7 +39,6 @@ with(VSP_OnOff, qplot(Rate, PSNR, col = OnOff,
                               geom = c("point", "line"),
                               xlab = "Rate (Kbps)",
                               ylab = "PSNR (dB)",
-                              asp = 0.85, 
                               main = "VIEW SYNTHESIS PREDICTION"))
 
 
@@ -47,6 +46,18 @@ with(VSP_OnOff, qplot(Rate, PSNR, col = OnOff,
 dev.copy(png, file="VSP_analysis.png")
 dev.off()
 
+## Step 6: Analize the average value of PSNR depending on difference QP_texture
+VSP_Difference_PSNR <- mean(VSP_Data[VSP_Data$OnOff=="Enable",]$PSNR) - 
+        mean(VSP_Data[VSP_Data$OnOff=="Disable",]$PSNR)
+
+## Step 7: Compare the difference when DMVP is enable or disable
+VSP_Difference_Rate <- vector()
+for (i in 1:(length(VSP_Data$OnOff)/2)) {
+        VSP_Difference_Rate <- cbind(VSP_Difference_Rate, (VSP_Data[VSP_Data$OnOff=="Disable",]$Rate[i] - 
+                                                                   VSP_Data[VSP_Data$OnOff=="Enable",]$Rate[i]) / 
+                                             VSP_Data[VSP_Data$OnOff=="Disable",]$Rate[i])
+}
+AVE_VSP_Difference_Rate <- mean(VSP_Difference_Rate)
 
 # For optional format for analysis
 # Txt format of raw data as well as organized data is supplied

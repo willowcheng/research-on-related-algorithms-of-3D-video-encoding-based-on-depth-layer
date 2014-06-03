@@ -27,9 +27,11 @@ ALC_SubData <- SubData[
 
 ## Step 3: Subset by variables
 
-ALC_Data <- data.frame(OnOff=ALC_SubData$AdaptiveLuminanceCompensation, 
+ALC_sData <- data.frame(OnOff=ALC_SubData$AdaptiveLuminanceCompensation, 
                        Rate=ALC_SubData$SUM_Rate, 
                        PSNR=ALC_SubData$AVE_PSNR)
+# Order by OnOff variable for precise observation
+ALC_Data <- ALC_sData[order(ALC_sData$OnOff),]
 
 
 ## Step 4: Use ggplot package to plot graph
@@ -42,13 +44,26 @@ with(ALC_OnOff, qplot(Rate, PSNR, col = OnOff,
                        geom = c("point", "line"),
                        xlab = "Rate (Kbps)",
                        ylab = "PSNR (dB)",
-                       asp = 0.85, 
                        main = "ADAPTIVE LUMINANCE COMPENSATION"))
 
 
 ## Step 5: Copy graph from device into hard disk in work directory
 dev.copy(png, file="ALC_analysis.png")
 dev.off()
+
+
+## Step 6: Analize the average value of PSNR depending on difference QP_texture
+ALC_Difference_PSNR <- mean(ALC_Data[ALC_Data$OnOff=="Enable",]$PSNR) - 
+        mean(ALC_Data[ALC_Data$OnOff=="Disable",]$PSNR)
+
+## Step 7: Compare the difference when DMVP is enable or disable
+ALC_Difference_Rate <- vector()
+for (i in 1:(length(ALC_Data$OnOff)/2)) {
+        ALC_Difference_Rate <- cbind(ALC_Difference_Rate, (ALC_Data[ALC_Data$OnOff=="Disable",]$Rate[i] - 
+                                                           ALC_Data[ALC_Data$OnOff=="Enable",]$Rate[i]) / 
+                                         ALC_Data[ALC_Data$OnOff=="Disable",]$Rate[i])
+}
+AVE_ALC_Difference_Rate <- mean(ALC_Difference_Rate)
 
 # For optional format for analysis
 # Txt format of raw data as well as organized data is supplied
