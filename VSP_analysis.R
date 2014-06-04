@@ -2,7 +2,6 @@
 #This script is used for analizing effect of VSP algorithm
 ##########################################################
 
-
 ## Step 1: read raw data from work directory
 # Uncomment next line if xlsx package haven't been installed
 #install.packages("xlsx")
@@ -12,7 +11,6 @@ library(xlsxjars)
 library(xlsx)
 RawData <- read.xlsx(file="./RawData.xlsx", sheetIndex=1)
 
-
 ## Step 2: Subset by observations
 # With DMVP enable and ALC enable 
 # Part of quantization parameter (QP) values are chosen
@@ -20,14 +18,12 @@ SubData <- RawData[RawData$DepthBaseMVP=="Enable" &
                            RawData$AdaptiveLuminanceCompensation=="Enable", ]
 VSP_SubData <- SubData[SubData$Texture_QPISlice==SubData$ Depth_QPISlice, ]
 
-
 ## Step 3: Subset by variables
 VSP_sData <- data.frame(OnOff=VSP_SubData$VSP_Enable, 
                        Rate=VSP_SubData$SUM_Rate, 
                        PSNR=VSP_SubData$AVE_PSNR)
 # Order by OnOff variable for precise observation
 VSP_Data <- VSP_sData[order(VSP_sData$OnOff),]
-
 
 ## Step 4: Use ggplot package to plot graph
 # If ggplot2 package haven't been installed, please uncomment next line
@@ -41,16 +37,15 @@ with(VSP_OnOff, qplot(Rate, PSNR, col = OnOff,
                               ylab = "PSNR (dB)",
                               main = "VIEW SYNTHESIS PREDICTION"))
 
-
 ## Step 5: Copy graph from device into hard disk in work directory
 dev.copy(png, file="VSP_analysis.png")
 dev.off()
 
-## Step 6: Analize the average value of PSNR depending on difference QP_texture
-VSP_Difference_PSNR <- mean(VSP_Data[VSP_Data$OnOff=="Enable",]$PSNR) - 
+## Step 6: Analize the average value of PSNR based on difference QP_texture
+AVE_VSP_Difference_PSNR <- mean(VSP_Data[VSP_Data$OnOff=="Enable",]$PSNR) - 
         mean(VSP_Data[VSP_Data$OnOff=="Disable",]$PSNR)
 
-## Step 7: Compare the difference when DMVP is enable or disable
+## Step 7: Compare the difference when VSP is enable or disable
 VSP_Difference_Rate <- vector()
 for (i in 1:(length(VSP_Data$OnOff)/2)) {
         VSP_Difference_Rate <- cbind(VSP_Difference_Rate, (VSP_Data[VSP_Data$OnOff=="Disable",]$Rate[i] - 
