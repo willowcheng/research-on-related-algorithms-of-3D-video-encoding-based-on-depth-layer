@@ -1,5 +1,5 @@
 ##########################################################
-#This script is used for analizing effect of ALC algorithm
+#This script is used for analyzing effect of ALC algorithm
 ##########################################################
 
 ## Step 1: read raw data from work directory
@@ -15,7 +15,8 @@ RawData <- read.xlsx(file="./RawData.xlsx", sheetIndex=1)
 # With VSP enable and DMVP enable
 # Part of quantization parameters (QP) are chosen
 SubData <- RawData[RawData$VSP_Enable=="Enable" & 
-                           RawData$DepthBaseMVP=="Enable", ]
+                           RawData$DepthBaseMVP=="Enable" & 
+                           RawData$FrameToBeEncoded==100, ]
 ALC_SubData <- SubData[
         SubData$Texture_QPISlice==SubData$Depth_QPISlice, ]
 
@@ -34,7 +35,7 @@ library(ggplot2)
 ALC_OnOff <- aggregate(PSNR ~ Rate + OnOff, data = ALC_Data, FUN = sum)
 with(ALC_OnOff, qplot(Rate, PSNR, col = OnOff, 
                        geom = c("point", "line"),
-                       xlab = "Rate (Kbps)",
+                       xlab = "Bit Rate (Kbps)",
                        ylab = "PSNR (dB)",
                        main = "ADAPTIVE LUMINANCE COMPENSATION"))
 

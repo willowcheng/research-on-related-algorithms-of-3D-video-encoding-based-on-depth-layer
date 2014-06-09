@@ -1,5 +1,5 @@
 ##########################################################
-#This script is used for analizing effect of VSP algorithm
+#This script is used for analyzing effect of VSP algorithm
 ##########################################################
 
 ## Step 1: read raw data from work directory
@@ -15,7 +15,8 @@ RawData <- read.xlsx(file="./RawData.xlsx", sheetIndex=1)
 # With DMVP enable and ALC enable 
 # Part of quantization parameter (QP) values are chosen
 SubData <- RawData[RawData$DepthBaseMVP=="Enable" & 
-                           RawData$AdaptiveLuminanceCompensation=="Enable", ]
+                           RawData$AdaptiveLuminanceCompensation=="Enable" & 
+                           RawData$FrameToBeEncoded==100, ]
 VSP_SubData <- SubData[SubData$Texture_QPISlice==SubData$ Depth_QPISlice, ]
 
 ## Step 3: Subset by variables
@@ -33,7 +34,7 @@ library(ggplot2)
 VSP_OnOff <- aggregate(PSNR ~ Rate + OnOff, data = VSP_Data, FUN = sum)
 with(VSP_OnOff, qplot(Rate, PSNR, col = OnOff, 
                               geom = c("point", "line"),
-                              xlab = "Rate (Kbps)",
+                              xlab = "Bit Rate (Kbps)",
                               ylab = "PSNR (dB)",
                               main = "VIEW SYNTHESIS PREDICTION"))
 
