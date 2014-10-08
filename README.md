@@ -1,4 +1,4 @@
-# DataAnalysis
+# Graduate Design Data Analysis
 
 > The scripts are original work by Liu Cheng, which are used in graduation project. 
 Feel free to use it to develop yours.
